@@ -155,6 +155,69 @@ app.post("/slack/anime-search", async (req, res) => {
     }
   });
 
+  app.post("/slack/interactions", async (req, res) => {
+    const payload = JSON.parse(req.body.payload);
+  
+    res.send();
+  
+    if (payload.type === "block_actions") {
+      const action = payload.actions[0];
+  
+      if (action.action_id === "char_select") {
+        const id = action.value;
+        const responseUrl = payload.response_url;
+  
+        try {
+          const response = await fetch(
+            `https://api.jikan.moe/v4/characters/${id}/full`
+          );
+  
+          const data = await response.json();
+          const char = data.data;
+  
+          const animeList =
+            char.anime?.map(a => a.anime.title).slice(0, 3).join(", ") || "N/A";
+  
+          const blocks = [
+            {
+              type: "section",
+              text: {
+                type: "mrkdwn",
+                text:
+  `*👤 ${char.name}*
+  
+  🎭 Kanji: ${char.name_kanji || "N/A"}
+  🔥 Favorites: ${char.favorites || "N/A"}
+  🎬 Anime: ${animeList}
+  
+  📝 About:
+  ${char.about ? char.about.substring(0, 500) + "..." : "N/A"}`
+              },
+              accessory: {
+                type: "image",
+                image_url: char.images.jpg.image_url,
+                alt_text: char.name
+              }
+            }
+          ];
+  
+          await fetch(responseUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              replace_original: true,
+              response_type: "ephemeral",
+              blocks
+            })
+          });
+  
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  });
+
 app.post("/slack/random-anime", async (req, res) => {
   try {
     const page = Math.floor(Math.random() * 20) + 1;
