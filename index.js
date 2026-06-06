@@ -11,7 +11,7 @@ app.get("/", (req, res) => {
   res.send("Venix is running 🚀");
 });
 
-app.post("/slack/anisearch", async (req, res) => {
+app.post("/slack/anime-search", async (req, res) => {
   const text = req.body.text;
 
   return res.json({
@@ -20,14 +20,15 @@ app.post("/slack/anisearch", async (req, res) => {
   });
 });
 
-app.post("/slack/charsearch", async (req, res) => {
-  const text = req.body.text;
-
-  return res.json({
-    response_type: "ephemeral",
-    text: `Searching character: *${text}*`
+app.post("/slack/character-search", (req, res) => {
+    const text = req.body.text;
+  
+    // IMMER sofort antworten!
+    return res.json({
+      response_type: "ephemeral",
+      text: `👤 Character search received: ${text || "no input"}`
+    });
   });
-});
 
 app.post("/slack/random", async (req, res) => {
   return res.json({

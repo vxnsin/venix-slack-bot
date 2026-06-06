@@ -1,1 +1,1 @@
-"# venix-slack-bot" 
+# Venix Anime Search Bot for Slack.
