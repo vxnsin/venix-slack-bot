@@ -158,7 +158,15 @@ app.command("/character-search", async ({ command, ack, respond }) => {
 app.action("char_select", async ({ ack, body, client }) => {
   await ack();
 
-  const id = body.actions[0].value;
+  const id = body.actions?.[0]?.value;
+
+  const channel = body.channel?.id;
+  const ts = body.message?.ts;
+
+  if (!channel) {
+    console.log("No channel found in interaction");
+    return;
+  }
 
   try {
     const response = await fetch(
@@ -166,20 +174,19 @@ app.action("char_select", async ({ ack, body, client }) => {
     );
 
     const data = await response.json();
-    const char = data.data;
+    const char = data?.data;
+
+    if (!char) return;
 
     const animeList =
       char.anime?.map((a) => a.anime?.title).slice(0, 3).join(", ") || "N/A";
 
-    await client.chat.update({
-      channel: body.channel.id,
-      ts: body.message.ts,
-      blocks: [
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text:
+    const blocks = [
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text:
 `*👤 ${char.name}*
 
 🎭 Kanji: ${char.name_kanji || "N/A"}
@@ -187,21 +194,36 @@ app.action("char_select", async ({ ack, body, client }) => {
 
 📝 About:
 ${char.about ? char.about.substring(0, 500) + "..." : "N/A"}`
-          },
-          accessory: {
-            type: "image",
-            image_url: char.images?.jpg?.image_url,
-            alt_text: char.name
-          }
+        },
+        accessory: {
+          type: "image",
+          image_url: char.images?.jpg?.image_url,
+          alt_text: char.name
         }
-      ]
-    });
+      }
+    ];
+
+    // 🔥 DIFFERENT BEHAVIOR DEPENDING ON CONTEXT
+    if (ts) {
+      // update original message
+      await client.chat.update({
+        channel,
+        ts,
+        blocks
+      });
+    } else {
+      // fallback: post new message
+      await client.chat.postMessage({
+        channel,
+        blocks,
+        text: "Character details"
+      });
+    }
 
   } catch (err) {
     console.error(err);
   }
 });
-
 
 app.command("/random-anime", async ({ ack, respond }) => {
   await ack();
