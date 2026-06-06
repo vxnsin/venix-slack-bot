@@ -121,7 +121,7 @@ app.post("/slack/anime-search", async (req, res) => {
             type: "mrkdwn",
             text:
   `*👤 ${char.name}*
-  🔥 Favorites: ${char.favorites || "N/A"}`
+  🎬 From: ${char.anime?.[0]?.anime?.title || "Unknown"}`
           },
           accessory: {
             type: "button",
@@ -187,7 +187,6 @@ app.post("/slack/anime-search", async (req, res) => {
   `*👤 ${char.name}*
   
   🎭 Kanji: ${char.name_kanji || "N/A"}
-  🔥 Favorites: ${char.favorites || "N/A"}
   🎬 Anime: ${animeList}
   
   📝 About:
