@@ -1,0 +1,24 @@
+{
+  "name": "venix-bot",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/vxnsin/venix-slack-bot#readme",
+  "bugs": {
+    "url": "https://github.com/vxnsin/venix-slack-bot/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vxnsin/venix-slack-bot.git"
+  },
+  "license": "ISC",
+  "author": "Vensin",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "body-parser": "^2.2.2",
+    "express": "^5.2.1"
+  }
+}
