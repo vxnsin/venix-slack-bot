@@ -29,9 +29,9 @@ It allows users to search for anime and characters using the Jikan API and get d
 ## Setup
 
 1. Install dependencies:
-   ```bash
+   `
    npm install
-  ```
+   `
 
 2. Create a `.env` file:
 
