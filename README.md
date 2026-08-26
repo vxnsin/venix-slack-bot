@@ -55,5 +55,5 @@ The project was created as part of the Hack Club Stardance event:
 
 ## Author
 
-Built by @vxnsin
+Built by [@vxnsin](https://github.com/vxnsin)
 Portfolio: [https://venisn.dev](https://venisn.dev)
